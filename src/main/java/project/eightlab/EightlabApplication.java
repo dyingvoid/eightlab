@@ -5,13 +5,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import project.eightlab.fileProcessing.FileProcessor;
+import project.eightlab.fileProcessing.ImageProcessor;
 
 import java.io.IOException;
 
 @SpringBootApplication
 public class EightlabApplication implements CommandLineRunner {
     @Autowired
-    public EightlabApplication(FileProcessor processor) {
+    public EightlabApplication(ImageProcessor processor) {
         this.processor = processor;
     }
 
@@ -19,11 +20,11 @@ public class EightlabApplication implements CommandLineRunner {
         SpringApplication.run(EightlabApplication.class, args);
     }
 
-    private final FileProcessor processor;
+    private final ImageProcessor processor;
 
     @Override
     public void run(String... args) throws IOException {
-        String path = "C:\\Users\\Dying\\IdeaProjects\\eightlab\\src\\main\\resources\\file.txt";
+        String path = "C:\\Users\\Dying\\Downloads\\Canon_40D.jpg";
 
         processor.process(path);
     }

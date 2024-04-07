@@ -4,5 +4,5 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface FileProcessor {
-    void process(String text) throws IOException;
+    void process(String path) throws IOException;
 }
