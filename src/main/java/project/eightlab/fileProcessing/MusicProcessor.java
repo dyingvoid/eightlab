@@ -10,7 +10,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public class MusicProcessor implements FileProcessor{
 
     @SneakyThrows
     @Override
-    public void process(String path, int option) throws IOException {
+    public void process(String path, int option){
         File file = new File(path);
 
         InputStream input = new FileInputStream(file);
@@ -48,17 +47,16 @@ public class MusicProcessor implements FileProcessor{
         parser.parse(input, handler, metadata, context);
         input.close();
 
-        String[] metadataNames = metadata.names();
-
-        for(String name : metadataNames){
-            System.out.println(name + ": " + metadata.get(name));
+        switch (option) {
+            case (1):
+                System.out.println("Title: " + metadata.get("title"));
+                break;
+            case (2):
+                System.out.println("Duration: " + metadata.get("xmpDM:duration"));
+                break;
+            case (3):
+                System.out.println("Artists: " + metadata.get("xmpDM:artist"));
+                break;
         }
-
-        System.out.println("----------------------------------------------");
-        System.out.println("Title: " + metadata.get("title"));
-        System.out.println("Artists: " + metadata.get("xmpDM:artist"));
-        System.out.println("Composer : " + metadata.get("xmpDM:composer"));
-        System.out.println("Genre : " + metadata.get("xmpDM:genre"));
-        System.out.println("Album : " + metadata.get("xmpDM:album"));
     }
 }

@@ -79,6 +79,7 @@ public class TextProcessor implements FileProcessor {
                 .stream()
                 .flatMap(line -> Stream.of(line.split(" ")))
                 .filter(word -> !word.isEmpty())
+                .map(word -> word.replace(".", "").replace(",", ""))
                 .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
     }
 }

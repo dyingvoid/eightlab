@@ -15,7 +15,7 @@ public class FileProcessorFactory {
     }
 
 
-    public FileProcessor getProccessor(String path) {
+    public FileProcessor getProcessor(String path) {
         for (FileProcessor fileProcessor : fileProcessorList) {
             if (fileProcessor.isSupported(path)) {
                 return fileProcessor;
