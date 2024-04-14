@@ -15,17 +15,46 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ImageProcessor implements FileProcessor {
     @Override
-    public void process(String path) throws IOException {
+    public boolean isSupported(String path) {
+        return Optional.ofNullable(path)
+                .filter(s -> s.contains("."))
+                .map(s -> s.substring(s.lastIndexOf(".") + 1))
+                .filter(s -> s.equals("jpeg") || s.equals("jpg") || s.equals("png"))
+                .isPresent();
+    }
+
+    @Override
+    public String getDescription() {
+        return """
+                1. Gets size of an image.
+                2. Gets exif data of an image.
+                3. Prints image in ascii characters.
+                """;
+    }
+
+    @Override
+    public void process(String path, int option) throws IOException {
         File imageFile = new File(path);
-        printImage(imageFile);
-        String size = getSize(imageFile);
-        String exif = getMetaData(imageFile);
-        System.out.println(size);
-        System.out.println(exif);
+
+        switch (option) {
+            case (1):
+                String size = getSize(imageFile);
+                System.out.println(size);
+                break;
+            case (2):
+                String exif = getMetaData(imageFile);
+                System.out.println(exif);
+                break;
+            case (3):
+                printImage(imageFile);
+                break;
+        }
     }
 
     private void printImage(File imageFile) throws IOException {

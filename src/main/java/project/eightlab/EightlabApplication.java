@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import project.eightlab.fileProcessing.*;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class EightlabApplication implements CommandLineRunner {
@@ -23,8 +24,15 @@ public class EightlabApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
         String path = "C:\\Users\\Dying\\IdeaProjects\\eightlab\\src\\main\\resources\\file.txt";
         FileProcessor processor = this.factory.getProccessor(path);
-        processor.process(path);
+
+        System.out.println(processor.getDescription() + "To exit input 228.");
+
+        for(int i = scanner.nextInt(); i != 228;) {
+            processor.process(path, i);
+            i = scanner.nextInt();
+        }
     }
 }

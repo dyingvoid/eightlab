@@ -12,27 +12,44 @@ import java.util.stream.Stream;
 @Component
 public class DirectoryProcessor implements FileProcessor {
     @Override
-    public void process(String path) {
-        File file = new File(path);
+    public boolean isSupported(String path) {
+        return (new File(path)).isDirectory();
+    }
 
-        if (!file.isDirectory())
-            return;
+    @Override
+    public String getDescription() {
+        return """
+                1. List all catalogue's files.
+                2. Show largest catalogue's file.
+                """;
+    }
+
+    @Override
+    public void process(String path, int option) {
+        File file = new File(path);
 
         Map<String, Long> ls = Stream.of(file.listFiles())
                 .filter(File::isFile)
                 .collect(Collectors.toMap(File::getName, FileUtils::sizeOf));
 
-        Optional<Map.Entry<String, Long>> filename = ls.entrySet().stream().max(Map.Entry.comparingByValue());
+        switch (option) {
+            case (1):
+                ls.entrySet().stream()
+                        .map(entry -> entry.getKey() + ": " + entry.getValue() + " bytes")
+                        .forEach(System.out::println);
+                break;
+            case (2):
+                Optional<Map.Entry<String, Long>> filename = ls.entrySet()
+                        .stream()
+                        .max(Map.Entry.comparingByValue());
 
-        ls.entrySet().stream()
-                .map(entry -> entry.getKey() + ": " + entry.getValue() + " bytes")
-                .forEach(System.out::println);
-
-        filename.ifPresent(pair ->
-                System.out.println(
-                        "Largest file is: " + pair.getKey() +
-                                "with size of " + pair.getValue() + " bytes."
-                )
-        );
+                filename.ifPresent(pair ->
+                        System.out.println(
+                                "Largest file is: " + pair.getKey() +
+                                        "with size of " + pair.getValue() + " bytes."
+                        )
+                );
+                break;
+        }
     }
 }

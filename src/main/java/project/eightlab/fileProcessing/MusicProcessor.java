@@ -12,12 +12,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 @Component
 public class MusicProcessor implements FileProcessor{
+    @Override
+    public boolean isSupported(String path) {
+        return Optional.ofNullable(path)
+                .filter(s -> s.contains("."))
+                .map(s -> s.substring(s.lastIndexOf(".") + 1))
+                .filter(s -> s.equals("mp3"))
+                .isPresent();
+    }
+
+    @Override
+    public String getDescription() {
+        return """
+                1. Gets name of a song.
+                2. Gets duration of a song.
+                3. Gets information about artist of a song.
+                """;
+    }
+
     @SneakyThrows
     @Override
-    public void process(String path) throws IOException {
+    public void process(String path, int option) throws IOException {
         File file = new File(path);
 
         InputStream input = new FileInputStream(file);
@@ -38,8 +57,8 @@ public class MusicProcessor implements FileProcessor{
         System.out.println("----------------------------------------------");
         System.out.println("Title: " + metadata.get("title"));
         System.out.println("Artists: " + metadata.get("xmpDM:artist"));
-        System.out.println("Composer : "+metadata.get("xmpDM:composer"));
-        System.out.println("Genre : "+metadata.get("xmpDM:genre"));
-        System.out.println("Album : "+metadata.get("xmpDM:album"));
+        System.out.println("Composer : " + metadata.get("xmpDM:composer"));
+        System.out.println("Genre : " + metadata.get("xmpDM:genre"));
+        System.out.println("Album : " + metadata.get("xmpDM:album"));
     }
 }
